@@ -56,3 +56,9 @@ Term::getTF() {
     return 1.0 + log10(repetitions_);
   }
 }
+
+// Sobrecarga del operador "=="
+bool
+Term::operator==(const Term& term) const {
+  return text_ == term.text_;
+}

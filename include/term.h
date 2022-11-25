@@ -24,6 +24,9 @@ class Term {
     // Calculo del Term frequenty
     double getTF();
 
+    // Sobrecarga de operadores
+    bool operator==(const Term&) const;
+
   private:
     std::string text_;
     unsigned repetitions_;  
