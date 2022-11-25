@@ -1,30 +1,38 @@
 #pragma once
 
 #include <iostream>
-#include <set>
+#include <vector>
 
 #include "../include/term.h"
 
 class Document {
   public:
     // Constructor && Destructor
-    Document(std::set<Term> = {});
+    Document(std::vector<Term> = {});
     ~Document();
 
     // Getters
-    std::set<Term> getTerms();
+    std::vector<Term> getTerms();
 
-    // Setters
-    void setTerms(std::set<Term>);
+    // vectorters
+    void setTerms(std::vector<Term>);
 
     // Operaciones
-    bool checkTerm(Term);
-    bool addTerm(Term);
+    int findTerm(Term);
+    void addTerm(Term);
     bool removeTerm(Term);
   
+    // E/S
+    void write(std::ostream& = std::cout);
+    void read(std::istream& = std::cin);
+
     // Otro
     double getLength(); // Implementar!!
 
   private:
-    std::set<Term> terms_;  
+    std::vector<Term> terms_;
 };
+
+// Operadores sobrecargados de E/S
+std::ostream& operator<<(std::ostream&, Document&);
+//std::istream& operator>>(std::istream&, Document&);

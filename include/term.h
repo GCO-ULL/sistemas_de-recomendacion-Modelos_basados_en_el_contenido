@@ -6,7 +6,7 @@
 class Term {
   public:
     // Constructor && Destructor
-    Term(std::string, unsigned = 0);
+    Term(std::string);
     ~Term();
 
     // Getters
@@ -15,7 +15,6 @@ class Term {
 
     // Setters
     void setText(std::string);
-    void setRepetitions(unsigned);
 
     // Operaciones
     void addRepetitions(unsigned = 1);
@@ -27,7 +26,15 @@ class Term {
     // Sobrecarga de operadores
     bool operator==(const Term&) const;
 
+    // E/S
+      void write(std::ostream& = std::cout);
+      void read(std::istream& = std::cin);
+
   private:
     std::string text_;
-    unsigned repetitions_;  
+    unsigned repetitions_;
 };
+
+// Operadores sobrecargados de E/S
+std::ostream& operator<<(std::ostream&, Term&);
+std::istream& operator>>(std::istream&, Term&);

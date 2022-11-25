@@ -1,9 +1,9 @@
 #include "../include/term.h"
 
 // Constructor
-Term::Term(std::string text, unsigned repetitions) {
+Term::Term(std::string text) {
   text_ = text;
-  repetitions_ = repetitions;
+  repetitions_ = 1;
 }
 
 // Destructor
@@ -26,11 +26,6 @@ Term::setText(std::string text) {
   text_ = text;
 }
 
-void
-Term::setRepetitions(unsigned repetitions) {
-  repetitions_ = repetitions;
-}
-
 // Incrementa el numero de repeticiones
 void
 Term::addRepetitions(unsigned reps) {
@@ -40,7 +35,7 @@ Term::addRepetitions(unsigned reps) {
 // Decrementa el número de repeticiones
 void
 Term::deleteRepetitions(unsigned reps) {
-  if (repetitions_ < reps) {
+  if (repetitions_ <= reps) {
     throw "Wrong number of repetitions to delete";
   } else {
     repetitions_ -= reps;
@@ -50,15 +45,35 @@ Term::deleteRepetitions(unsigned reps) {
 // Cálculo del Term Frequenty
 double
 Term::getTF() {
-  if (repetitions_== 0) {
-    return 0.0;
-  } else {
-    return 1.0 + log10(repetitions_);
-  }
+  return 1.0 + log10(repetitions_);
 }
 
+// Método de escritura
+void
+Term::write(std::ostream& os) {
+  os << text_ << "(" << repetitions_ << ")";
+}
+
+// Metodo de lectura
+void
+Term::read(std::istream& is) {
+  is >> text_;
+  repetitions_ = 1;
+}
 // Sobrecarga del operador "=="
 bool
 Term::operator==(const Term& term) const {
   return text_ == term.text_;
+}
+
+// Sobrecarga del operador de escritura
+std::ostream& operator<<(std::ostream& os, Term& term) {
+  term.write(os);
+  return os;
+}
+
+// Sobrecarga del operador de lectura
+std::istream& operator>>(std::istream& is, Term& term) {
+  term.read(is);
+  return is;
 }
