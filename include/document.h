@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <tgmath.h>
 
 #include "../include/term.h"
 
@@ -14,7 +15,7 @@ class Document {
     // Getters
     std::vector<Term> getTerms();
 
-    // vectorters
+    // Setters
     void setTerms(std::vector<Term>);
 
     // Operaciones
@@ -27,7 +28,9 @@ class Document {
     void read(std::istream& = std::cin);
 
     // Otro
-    double getLength(); // Implementar!!
+    double getLength();
+    unsigned countWords();
+    double cosineSimilarity(Document); // Implementar!!!
 
   private:
     std::vector<Term> terms_;

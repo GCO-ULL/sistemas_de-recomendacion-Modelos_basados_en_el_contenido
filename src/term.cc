@@ -60,6 +60,7 @@ Term::read(std::istream& is) {
   is >> text_;
   repetitions_ = 1;
 }
+
 // Sobrecarga del operador "=="
 bool
 Term::operator==(const Term& term) const {

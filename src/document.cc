@@ -60,14 +60,34 @@ Document::removeTerm(Term term) {
   }
 }
 
+// Calcula el tamaño del vector del documento
+double
+Document::getLength() {
+  float vectorSize = 0.0;
+  for (Term term: terms_) {
+    vectorSize += pow(term.getTF(), 2.0); 
+  }
+  return sqrt(vectorSize);
+}
+
+// Cuenta el número total de términos del documento
+unsigned
+Document::countWords() {
+  unsigned count = 0;
+  for (Term term: terms_) {
+    count += term.getRepetitions();
+  }
+  return count;
+}
+
 // Método de escritura
 void
 Document::write(std::ostream& os) {
-  os << "[ ";
-  for (Term term: terms_) {
-    os << term << " ";
+  os << "{\n";
+  for (unsigned i = 0; i < terms_.size() - 1; i++) {
+    os << "  [" << i << "] " << terms_[i] << ",\n";
   }
-  os << "]";
+  os << "  [" << terms_.size() - 1 << "] " << terms_[terms_.size() - 1] << "\n}";
 }
 
 
