@@ -5,6 +5,9 @@
 #include <tgmath.h>
 
 #include "../include/term.h"
+#include "../include/json.h"
+
+using json = nlohmann::json;
 
 class Document {
   public:
@@ -22,6 +25,10 @@ class Document {
     int findTerm(Term);
     void addTerm(Term);
     bool removeTerm(Term);
+    bool removeTotalTerm(Term);
+
+    // Operaciones de edición
+    void lexematize(json);
   
     // E/S
     void write(std::ostream& = std::cout);

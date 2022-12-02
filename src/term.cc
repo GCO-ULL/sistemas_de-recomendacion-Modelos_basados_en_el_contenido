@@ -1,9 +1,11 @@
 #include "../include/term.h"
 
 // Constructor
-Term::Term(std::string text) {
+Term::Term(std::string text, unsigned reps) {
   text_ = text;
-  repetitions_ = 1;
+  repetitions_ = reps;
+  if (repetitions_ == 0)
+    throw "term repetitions cant be zero";
 }
 
 // Destructor
@@ -24,6 +26,13 @@ Term::getRepetitions() {
 void
 Term::setText(std::string text) {
   text_ = text;
+}
+
+void
+Term::setRepetitions(unsigned reps) {
+  repetitions_ = reps;
+  if (repetitions_ == 0)
+    throw "term repetitions cant be zero";
 }
 
 // Incrementa el numero de repeticiones

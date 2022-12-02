@@ -1,9 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include "../include/json.h"
 #include "../include/document.h"
-
-using json = nlohmann::json;
 
 // Cuenta el número de términos de todo el corpus de documentos
 unsigned
@@ -106,21 +103,18 @@ int main(int argc, char* argv[]) {
     LISTO!! objecciones: contacten alu0101321219@ull.edu.es (de 2 a 4 no respondo)
   */
 
-  Term t1("Analytics");
-  t1.addRepetitions(20);
-  Term t2("Data");  
-  t2.addRepetitions(23);
-  //Term t3("Cloud");  
-  //t3.addRepetitions(7);
-  Term t4("Smart");  
-  t4.addRepetitions(1);
-  Term t5("Insight");
-  t5.addRepetitions(1);
+  Term t1("was", 21);
+  Term t2("Data", 24);  
+  Term t3("Cloud", 8);  
+  Term t4("Smart", 2);
+  Term t5("is", 2);
 
-  Document d1(std::vector<Term>({t1, t2, t4, t5}));
+  Document d1(std::vector<Term>({t1, t2, t3, t4, t5}));
 
   std::cout << d1 << "\n";
-  std::cout << "VECTOR SIZE == " << d1.getLength() << "\n";
+  d1.lexematize(lexemeData);
+  std::cout << d1 << "\n";
+  //std::cout << "VECTOR SIZE == " << d1.getLength() << "\n";
 
   inputDocuments.close();
   inputStopWords.close();

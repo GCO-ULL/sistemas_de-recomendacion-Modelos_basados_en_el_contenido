@@ -6,7 +6,7 @@
 class Term {
   public:
     // Constructor && Destructor
-    Term(std::string);
+    Term(std::string, unsigned = 1);
     ~Term();
 
     // Getters
@@ -15,6 +15,7 @@ class Term {
 
     // Setters
     void setText(std::string);
+    void setRepetitions(unsigned);
 
     // Operaciones
     void addRepetitions(unsigned = 1);

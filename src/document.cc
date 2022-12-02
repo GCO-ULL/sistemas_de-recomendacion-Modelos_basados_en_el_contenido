@@ -2,7 +2,10 @@
 
 // Constructor
 Document::Document(std::vector<Term> terms) {
-  terms_ = terms;
+  terms_ = {};
+  for (Term term: terms) {
+    addTerm(term);
+  }
 }
 
 // Destructor
@@ -40,7 +43,7 @@ Document::addTerm(Term term) {
   if (pos == -1) {
     terms_.push_back(term);
   } else {
-    terms_[pos].addRepetitions();
+    terms_[pos].addRepetitions(term.getRepetitions());
   }
 }
 
@@ -57,6 +60,31 @@ Document::removeTerm(Term term) {
       terms_[pos].deleteRepetitions();
     }
     return true;
+  }
+}
+
+// Elimina un término y todas sus repeticiones del documento
+bool
+Document::removeTotalTerm(Term term) {
+  int pos = findTerm(term);
+  if (pos == -1) {
+    return false;
+  } else {
+    terms_.erase(terms_.begin() + pos);
+    return true;
+  }
+}
+
+// Operación de lexematización
+void
+Document::lexematize(json data) {
+  std::vector<Term> termsCopy = terms_;
+  for (Term term: termsCopy) {
+    std::string value = data.value(term.getText(), "not found");
+    if (value != "not found") {
+      addTerm(Term(value, term.getRepetitions()));
+      removeTotalTerm(term);
+    }
   }
 }
 
