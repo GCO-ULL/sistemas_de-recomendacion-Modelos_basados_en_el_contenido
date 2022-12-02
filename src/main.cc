@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
   inputStopWords.open(argv[2]);
 
   if (inputStopWords.fail()) {
-    std::cout << "No se pudo abrir archivo de lectura, ";
+    std::cout << "No se pudo abrir archivo de lectura de palabras de parada, ";
     std::cout << "comprueba si se ingresó un nombre correcto\n";
     inputDocuments.close();
     return 1;
@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
   std::ifstream inputLexeme(argv[3]);
 
   if (inputLexeme.fail()) {
-    std::cout << "No se pudo abrir archivo de lexematización, ";
+    std::cout << "No se pudo abrir el archivo de lexematización, ";
     std::cout << "comprueba si se ingresó un nombre correcto\n";
     inputDocuments.close();
     inputStopWords.close();
