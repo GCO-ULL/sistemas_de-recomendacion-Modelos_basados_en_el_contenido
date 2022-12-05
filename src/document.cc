@@ -68,12 +68,26 @@ bool
 Document::removeTotalTerm(Term term) {
   int pos = findTerm(term);
   if (pos == -1) {
+    //std::cout << "NO ENCONTRADO !!\n";
     return false;
   } else {
     terms_.erase(terms_.begin() + pos);
+    std::cout << "ELIMINANDO TERMINO!! " << term << "\n";
+    std::cout << "El termino con posición " << pos << "\n";
+
     return true;
   }
 }
+
+// Eliminación de palabras de parada
+void
+Document::removeStopWords(std::vector<std::string> vector) {
+  for (std::string word: vector) {
+    //std::cout << word << "\n";
+    removeTotalTerm(Term(word));
+  }
+}
+
 
 // Operación de lexematización
 void
@@ -118,10 +132,26 @@ Document::write(std::ostream& os) {
   os << "  [" << terms_.size() - 1 << "] " << terms_[terms_.size() - 1] << "\n}";
 }
 
-
 // Método de lectura
-void read(std::istream& is) {
-  // Falta implementar
+void
+Document::read(std::istream& is) {
+  std::string line;
+  getline(is, line);
+
+  // Cambiamos todas las palabras a minúsculas
+  lowercase(line);
+
+  // Eliminamos los puntos y comas
+  removeChar(line, '.');
+  removeChar(line, ',');
+
+  // Separamos las palabras por espacios
+  std::vector<std::string> lineVector = split(line, ' ');
+
+  // Añadimos los términos
+  for (std::string el: lineVector) {
+    addTerm(Term(el));
+  }
 }
 
 
@@ -131,10 +161,46 @@ std::ostream& operator<<(std::ostream& os, Document& doc) {
   return os;
 }
 
-/*
+
 // Operador de lectura sobrecargado
 std::istream& operator>>(std::istream& is, Document& doc) {
   doc.read(is);
   return is;
 }
-*/
+
+void
+removeChar(std::string& str, char ch) {
+  str.erase(std::remove(str.begin(), str.end(), ch), str.end());
+}
+
+
+std::vector<std::string>
+split(std::string str, char pattern) {  
+    int posInit = 0;
+    int posFound = 0;
+    std::string splitted;
+    std::vector<std::string> results;
+    
+    while(posFound >= 0){
+        posFound = str.find(pattern, posInit);
+        splitted = str.substr(posInit, posFound - posInit);
+      posInit = posFound + 1;
+      results.push_back(splitted);
+  }
+
+  return results;
+}
+
+void lowercase(std::string& str) {
+  std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c){
+    return std::tolower(c); 
+  });
+}
+
+void removeSpaces(std::vector<std::string>& vector) {
+  for (int i = 0; i < vector.size(); i++) {
+    if (vector[i] == "") {
+      vector.erase(vector.begin() + i);
+    }
+  }
+}

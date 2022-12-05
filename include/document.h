@@ -28,6 +28,7 @@ class Document {
     bool removeTotalTerm(Term);
 
     // Operaciones de edición
+    void removeStopWords(std::vector<std::string>);
     void lexematize(json);
   
     // E/S
@@ -45,4 +46,8 @@ class Document {
 
 // Operadores sobrecargados de E/S
 std::ostream& operator<<(std::ostream&, Document&);
-//std::istream& operator>>(std::istream&, Document&);
+std::istream& operator>>(std::istream&, Document&);
+
+std::vector<std::string> split(std::string, char);
+void removeChar(std::string&, char);
+void lowercase(std::string&);
