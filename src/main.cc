@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 #include "../include/document.h"
 
 // Cuenta el número de términos de todo el corpus de documentos
@@ -43,26 +44,42 @@ readStopWordsFile(std::ifstream& is) {
   return vector;
 }
 
-
-/*
-Document 1
-Indice  Terminos   TF     IDF    TF-IDF
-[1]      casa     0.2323  23.44    0.44
-[2]      arbol    0.6677  655.33   0.33
-[3]      anita    0.2133  34.44    0.11
-
-Document 2
-
-*/
-
 // Impresión de datos de un documento
 void
 printDocumentData(Document doc, std::vector<Document> vDocs, std::ostream& os = std::cout) {
-  os << "Indice" << "\t" << "Terminos" << "\t" << "TF" << "\t" << "IDF" << "\t" << "TF-IDF" << std::endl;
+  os << "+----------------------------------------------------------------------+\n";
+  // os << "| Indice" << "    \t" << "| Terminos" << "\t\t\t" << "| TF" << "\t\t" << "| IDF" << "\t\t" << "| TF-IDF     |" << std::endl;
+  os << std::left << std::setw(11)  << " Indice";
+  os << std::left << std::setw(15) << "Terminos";
+  os << std::left << std::setw(15) << "Cantidad";
+  os << std::left << std::setw(10) << "TF";
+  os << std::left << std::setw(10) << "IDF";
+  os << std::left << std::setw(10) << "TF-IDF" << std::endl;
+  os << "+----------------------------------------------------------------------+\n";
   double documentLength = doc.getLength();
   for (int i = 0; i < doc.getTerms().size(); i++) {
     double termTF = doc.getTerms()[i].getTF();
-    os << "[" << i << "]" << "\t" << doc.getTerms()[i] << "\t" << termTF << "\t" << getIDF(doc.getTerms()[i], vDocs) << "\t" << termTF / documentLength << "\n";
+      // os << "| [" << i << "]" << "\t\t" << "| " << doc.getTerms()[i] << "\t\t\t\t" << "| " << termTF << "\t" << "| " << getIDF(doc.getTerms()[i], vDocs) << "\t" << "| " << termTF / documentLength <<"\n";
+      os << ' ' << std::left << std::setw(10) << i;
+      os << std::left << std::setw(15) << doc.getTerms()[i].getText();
+      os << std::left << std::setw(15) << doc.getTerms()[i].getRepetitions();
+      os << std::left << std::setw(10) << termTF;
+      os << std::left << std::setw(10) << getIDF(doc.getTerms()[i], vDocs);
+      os << std::left << std::setw(10) << termTF / documentLength;
+      os << '\n';
+  }
+}
+
+// Impresión de similaridades de documentos
+void
+printSimilarities(std::vector<Document> vector, std::ostream& os = std::cout) {
+  os << "SIMILARITIES:\n\n";
+  for(unsigned i = 0; i < vector.size(); i++) {
+    for (unsigned j = 0; j < vector.size(); j++) {
+      if (i != j) { 
+        os << "cos(" << i + 1 << "," << j + 1 << ") = " << vector[i].cosineSimilarity(vector[j]) << "\n";
+      }
+    }
   }
 }
 
@@ -71,7 +88,7 @@ int main(int argc, char* argv[]) {
   // Comprobamos que se haya ejecutado de la forma correcta
   if (!argv[1]) {
     std::cout << "Modo de empleo: ";
-    std::cout << "./main [documents.txt] [stop_words.txt] [lexeme.json]\n" ;
+    std::cout << "./main [documents.txt] [stop_words.txt] [lexeme.json] [output.txt]\n" ;
     std::cout << "Pruebe './main --help' para más información.\n";   
     return 1;
   }
@@ -132,59 +149,43 @@ int main(int argc, char* argv[]) {
   // Inicialización del vector de Documentos
   std::vector<Document> vDocs;
 
-
+  // Lectura de documentos
   while (!inputDocuments.eof()) {
     Document doc;
     inputDocuments >> doc;
-    //std::cout << doc;
-    //std::cout << "DOC ANTES >> " << doc << "\n";
     doc.removeStopWords(stopWords);
-    //std::cout << doc << "\n";
-    //std::cout << "DOC REMOVE STOPWORDS >> " << doc << "\n";
     doc.lexematize(lexemeData);
-    //std::cout << "DOC LEXEMATIZE >> " << doc << "\n";
     vDocs.push_back(doc);
   }
 
-  // Impresión de los datos del vector de documentos
-  //for (Document doc: vDocs) {
-    std::cout << vDocs[1] << "\n";
-    //printDocumentData(doc, vDocs);
-  //}
-  //Document doc =  vDocs[vDocs.size() -1];
+  // Escritura
+  if (argc >= 5) {
+    std::ofstream output(argv[4]);
+    if (output.fail()) {
+      std::cout << "No se pudo abrir el archivo de escritura, ";
+      std::cout << "comprueba si se ingresó un nombre correcto\n";
+      inputDocuments.close();
+      inputStopWords.close();
+      inputLexeme.close();
+      return 1;
+    }
+    for (unsigned i = 0; i < vDocs.size(); i++) {
+      output << "DOCUMENTO " << i + 1 <<":\n\n";
+      printDocumentData(vDocs[i], vDocs, output);
+      output << "\n";
+    }
+    printSimilarities(vDocs, output);
+    output.close();
+  } else {
+    for (unsigned i = 0; i < vDocs.size(); i++) {
+      std::cout << "DOCUMENTO " << i + 1 <<":\n\n";
+      printDocumentData(vDocs[i], vDocs);
+      std::cout << "\n";
+    }
+    printSimilarities(vDocs);
+  }
 
-  //std::cout << doc << "\n";
-
-  //doc.removeStopWords(readStopWordsFile(inputStopWords));
-
-  //std::cout << doc << "\n";
-
-  // Descripción del menú principal (idea)
-  /*
-    - Leemos cada documento linea por linea sobrecargando el operador de lectura de Document
-    - Los metemos en un vector de documentos vector<Document>
-    - Recorremos el vector
-    - Para cada documento
-      - Para cada termino dentro del documento
-        - Mostramos posicion del termino, termino, TF, IDF (usando funcion d arriba), TF-IDF (que es la resta de TF - lengthVector del documento)
-    - Luego las similaridades:
-      - Función cosineSimilarity(Document de la clase document)
-    LISTO!! objecciones: contacten alu0101321219@ull.edu.es (de 2 a 4 no respondo)
-  */
-/*
-  Term t1("was", 21);
-  Term t2("Data", 24);  
-  Term t3("Cloud", 8);  
-  Term t4("Smart", 2);
-  Term t5("is", 2);
-
-  Document d1(std::vector<Term>({t1, t2, t3, t4, t5}));
-
-  std::cout << d1 << "\n";
-  d1.lexematize(lexemeData);
-  std::cout << d1 << "\n";
-  //std::cout << "VECTOR SIZE == " << d1.getLength() << "\n";
-*/
+  // Cierre de ficheros
   inputDocuments.close();
   inputStopWords.close();
   inputLexeme.close();

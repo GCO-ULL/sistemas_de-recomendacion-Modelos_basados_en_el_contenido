@@ -68,13 +68,9 @@ bool
 Document::removeTotalTerm(Term term) {
   int pos = findTerm(term);
   if (pos == -1) {
-    //std::cout << "NO ENCONTRADO !!\n";
     return false;
   } else {
     terms_.erase(terms_.begin() + pos);
-    std::cout << "ELIMINANDO TERMINO!! " << term << "\n";
-    std::cout << "El termino con posición " << pos << "\n";
-
     return true;
   }
 }
@@ -83,7 +79,6 @@ Document::removeTotalTerm(Term term) {
 void
 Document::removeStopWords(std::vector<std::string> vector) {
   for (std::string word: vector) {
-    //std::cout << word << "\n";
     removeTotalTerm(Term(word));
   }
 }
@@ -122,6 +117,29 @@ Document::countWords() {
   return count;
 }
 
+// Calcula el TF-IDF de un término del documento si se encuentra
+double
+Document::getTFIDF(Term term) {
+  int pos = findTerm(term); 
+  if (pos != -1) {
+    return terms_[pos].getTF() / getLength();
+  } else {
+    throw "term doesnt exist on the document";
+  }
+}
+
+double
+Document::cosineSimilarity(Document doc) {
+  double similarity = 0.0;
+  for (Term term: terms_) {
+    int pos = doc.findTerm(term);
+    if (pos != -1) {
+      similarity += getTFIDF(term) * doc.getTFIDF(term);
+    }
+  }
+  return similarity;
+}
+
 // Método de escritura
 void
 Document::write(std::ostream& os) {
@@ -147,6 +165,7 @@ Document::read(std::istream& is) {
 
   // Separamos las palabras por espacios
   std::vector<std::string> lineVector = split(line, ' ');
+  removeSpaces(lineVector);
 
   // Añadimos los términos
   for (std::string el: lineVector) {
@@ -168,12 +187,13 @@ std::istream& operator>>(std::istream& is, Document& doc) {
   return is;
 }
 
+// Elimina un carácter de un string
 void
 removeChar(std::string& str, char ch) {
   str.erase(std::remove(str.begin(), str.end(), ch), str.end());
 }
 
-
+// Convierte un string a vector separado por un patrón que se introduce por parámetro
 std::vector<std::string>
 split(std::string str, char pattern) {  
     int posInit = 0;
@@ -191,12 +211,14 @@ split(std::string str, char pattern) {
   return results;
 }
 
+// Transforma los elementos de un string a minúscula
 void lowercase(std::string& str) {
   std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c){
     return std::tolower(c); 
   });
 }
 
+// Elimina los elementos vacios de un vector
 void removeSpaces(std::vector<std::string>& vector) {
   for (int i = 0; i < vector.size(); i++) {
     if (vector[i] == "") {

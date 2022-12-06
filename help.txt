@@ -1,1 +1,16 @@
-hola jejes aqui va el uso del programa y eso
+Modo de empleo:
+  ./main [documents.txt] [stop_words.txt] [lexeme.json] [output.txt]
+
+- [documents.txt]
+    --> Fichero de texto plano con extensión '.txt'.
+        Recoge los documentos a procesar por el programa.
+        Cada documento viene representado en una linea de fichero. 
+- [stop_words.txt]
+    --> Fichero con palabras de parada (stop words) a descartar durante el proceso de recomendación.
+        Las palabras vienen separadas por saltos de línea.
+- [lexem.json]
+    --> Fichero de lematización de términos.
+    --> Es un fichero con extensión '.json' que contiene un objeto clave-valor en el que se indica por cual palabra sustituir otra palabra.
+- [output.txt]
+    --> Fichero de salida.
+        Si no se especifica se muestra por pantalla.

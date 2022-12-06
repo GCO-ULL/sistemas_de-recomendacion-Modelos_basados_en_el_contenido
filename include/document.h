@@ -37,8 +37,9 @@ class Document {
 
     // Otro
     double getLength();
+    double getTFIDF(Term);
     unsigned countWords();
-    double cosineSimilarity(Document); // Implementar!!!
+    double cosineSimilarity(Document);
 
   private:
     std::vector<Term> terms_;
@@ -48,6 +49,8 @@ class Document {
 std::ostream& operator<<(std::ostream&, Document&);
 std::istream& operator>>(std::istream&, Document&);
 
+// Funciones adicionales
 std::vector<std::string> split(std::string, char);
 void removeChar(std::string&, char);
 void lowercase(std::string&);
+void removeSpaces(std::vector<std::string>& vector);

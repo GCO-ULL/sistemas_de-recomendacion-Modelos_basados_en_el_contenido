@@ -20,6 +20,7 @@ class Term {
     // Operaciones
     void addRepetitions(unsigned = 1);
     void deleteRepetitions(unsigned = 1);
+    unsigned getSize();
 
     // Calculo del Term frequenty
     double getTF();

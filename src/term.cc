@@ -51,6 +51,12 @@ Term::deleteRepetitions(unsigned reps) {
   }
 }
 
+// Devuelve el tamaño del término
+unsigned
+Term::getSize() {
+  return text_.size();
+}
+
 // Cálculo del Term Frequenty
 double
 Term::getTF() {
